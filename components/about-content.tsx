@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
-import mockAgents from "@/sampledata/mockAgents"
 
 export default function AboutContent() {
   return (
