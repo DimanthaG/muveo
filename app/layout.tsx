@@ -12,59 +12,44 @@ import { SessionProvider } from "@/components/providers/session-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
   title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
+    default: "Muveo Inc - Professional Moving Services in Toronto",
+    template: "%s | Muveo Inc"
   },
-  description: siteConfig.description,
-  keywords: [
-    "Photography",
-    "Videography",
-    "Professional Photography",
-    "Business Photography",
-    "Commercial Photography",
-    "Event Photography",
-    "Photo Studio",
-    "Video Production",
-    "Content Creation",
+  description: "Professional moving and logistics services in Toronto. Residential, commercial, and senior moving services across the GTA.",
+  keywords: ["moving company", "toronto movers", "residential moving", "commercial moving", "senior moving", "GTA movers"],
+  authors: [{ name: "Muveo Inc" }],
+  creator: "Muveo Inc",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
-  authors: [
-    {
-      name: "Raytronics",
-      url: siteConfig.url,
-    },
-  ],
-  creator: "Raytronics",
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
+    locale: "en_CA",
+    url: "https://muveo.ca",
+    title: "Muveo Inc - Professional Moving Services",
+    description: "Your trusted moving partner in Toronto",
+    siteName: "Muveo Inc",
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [siteConfig.ogImage],
-    creator: "@raytronics",
+    title: "Muveo Inc - Professional Moving Services",
+    description: "Your trusted moving partner in Toronto",
+    images: ["/og.jpg"],
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      {
+        url: "/logo1.jpg",
+        media: "(prefers-color-scheme: light)"
+      },
+      {
+        url: "/logo2.jpg",
+        media: "(prefers-color-scheme: dark)"
+      }
+    ],
   },
-  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -73,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="light" suppressHydrationWarning>
       <head />
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased",
@@ -82,14 +67,11 @@ export default function RootLayout({
         <SessionProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+            defaultTheme="light"
+            enableSystem={false}
           >
             <MinimalistNavbar />
-            <main className="pt-16">
-              {children}
-            </main>
+            {children}
             <Footer />
             <Toaster />
           </ThemeProvider>

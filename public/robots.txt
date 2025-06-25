@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://raytronics.vercel.app/sitemap.xml
+Sitemap: https://muveo.ca/sitemap.xml
 
 # Admin pages not for crawling
 Disallow: /admin/

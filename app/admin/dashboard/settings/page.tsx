@@ -18,11 +18,13 @@ import { Save, RefreshCw } from "lucide-react"
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
-  const [settings, setSettings] = useState({
-    siteName: "Raytronics",
-    siteDescription: "Transform your digital presence with cutting-edge solutions",
-    contactEmail: "contact@raytronics.com",
-  })
+  const defaultValues = {
+    siteName: "Muveo Inc",
+    siteDescription: "Professional moving and logistics services in Toronto",
+    siteUrl: "https://muveo.ca",
+    siteEmail: "MuveoInc@gmail.com",
+  }
+  const [settings, setSettings] = useState(defaultValues)
 
   const handleSave = async () => {
     setIsLoading(true)
@@ -98,15 +100,28 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="contactEmail">Contact Email</Label>
+                <Label htmlFor="siteUrl">Site URL</Label>
                 <Input
-                  id="contactEmail"
-                  type="email"
-                  value={settings.contactEmail}
+                  id="siteUrl"
+                  value={settings.siteUrl}
                   onChange={(e) =>
                     setSettings((prev) => ({
                       ...prev,
-                      contactEmail: e.target.value,
+                      siteUrl: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="siteEmail">Site Email</Label>
+                <Input
+                  id="siteEmail"
+                  type="email"
+                  value={settings.siteEmail}
+                  onChange={(e) =>
+                    setSettings((prev) => ({
+                      ...prev,
+                      siteEmail: e.target.value,
                     }))
                   }
                 />

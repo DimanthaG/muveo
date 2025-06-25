@@ -72,7 +72,7 @@ export default function AboutContent() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-24 text-center"
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Part of the Raytronics Group</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Our Moving Services</h2>
           <address className="text-muted-foreground not-italic">
             330/08, Saman Mawatha<br />
             Lake Road<br />
