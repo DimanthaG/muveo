@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
-import mockAgents from "@/sampledata/mockAgents"
 import { Mail, Phone, MapPin } from "lucide-react"
 
 export default function ContactContent() {
@@ -172,48 +171,6 @@ export default function ContactContent() {
               </div>
             </div>
 
-            {/* Team Contacts */}
-            <div className="space-y-4">
-              {mockAgents.map((agent) => (
-                <motion.div
-                  key={agent.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="bg-card border border-border/50 rounded-2xl p-6"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="relative w-12 h-12 rounded-full overflow-hidden">
-                      <img
-                        src={agent.imageUrl}
-                        alt={agent.name}
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">{agent.name}</h3>
-                      <p className="text-sm text-primary">{agent.specialty}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <a
-                      href={`mailto:${agent.email}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      {agent.email}
-                    </a>
-                    <a
-                      href={`tel:${agent.phone}`}
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Phone className="w-4 h-4" />
-                      {agent.phone}
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </div>
       </div>
