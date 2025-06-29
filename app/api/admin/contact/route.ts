@@ -1,30 +1,42 @@
 import { NextResponse } from "next/server"
+import { createClient } from '@supabase/supabase-js'
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { supabase } from "@/lib/supabase"
+import { authOptions } from "@/app/api/auth/auth-options"
+
+// Create a Supabase client with the service role key for admin access
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      persistSession: false,
+    }
+  }
+)
 
 export async function GET() {
   try {
+    // Check if user is authenticated
     const session = await getServerSession(authOptions)
-
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const { data: submissions, error } = await supabase
-      .from("contact_submissions")
-      .select("*")
-      .order("created_at", { ascending: false })
+    // Fetch submissions ordered by created_at desc (newest first)
+    const { data, error } = await supabaseAdmin
+      .from('contact_submissions')
+      .select('*')
+      .order('created_at', { ascending: false })
 
-    if (error) {
-      console.error("Error fetching contact submissions:", error)
-      return new NextResponse("Internal Server Error", { status: 500 })
-    }
+    if (error) throw error
 
-    return NextResponse.json(submissions)
+    return NextResponse.json(data)
   } catch (error) {
-    console.error("Error in contact submissions route:", error)
-    return new NextResponse("Internal Server Error", { status: 500 })
+    console.error('[CONTACT_GET]', error)
+    return new NextResponse(
+      error instanceof Error ? error.message : "Failed to fetch contact submissions",
+      { status: 500 }
+    )
   }
 }
 
@@ -33,7 +45,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { name, email, phone, company, subject, message } = body
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("contact_submissions")
       .insert([
         {

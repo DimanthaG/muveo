@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { format } from "date-fns"
-import { Mail, Phone, Building2, MessageSquare } from "lucide-react"
+import { Mail, Phone, MapPin, Calendar, Truck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,11 +12,13 @@ interface ContactSubmission {
   id: string
   name: string
   email: string
-  phone: string | null
-  company: string | null
-  subject: string | null
+  phone: string
+  move_type: string
+  move_date: string
+  from_location: string
+  to_location: string
   message: string
-  status: 'unread' | 'read'
+  status: 'unread' | 'read' | 'responded'
   created_at: string
 }
 
@@ -47,27 +49,27 @@ export default function ContactSubmissionsPage() {
     }
   }
 
-  const markAsRead = async (id: string) => {
+  const updateStatus = async (id: string, status: 'read' | 'responded') => {
     try {
       const response = await fetch(`/api/admin/contact/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: 'read' }),
+        body: JSON.stringify({ status }),
       })
 
       if (!response.ok) throw new Error('Failed to update status')
 
       setSubmissions(prev =>
         prev.map(sub =>
-          sub.id === id ? { ...sub, status: 'read' } : sub
+          sub.id === id ? { ...sub, status } : sub
         )
       )
 
       toast({
         title: "Success",
-        description: "Message marked as read",
+        description: `Message marked as ${status}`,
       })
     } catch (error) {
       console.error('Error updating submission:', error)
@@ -76,6 +78,19 @@ export default function ContactSubmissionsPage() {
         description: "Failed to update message status",
         variant: "destructive",
       })
+    }
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'unread':
+        return 'default'
+      case 'read':
+        return 'secondary'
+      case 'responded':
+        return 'success'
+      default:
+        return 'default'
     }
   }
 
@@ -90,9 +105,9 @@ export default function ContactSubmissionsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Contact Submissions</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Moving Quote Requests</h2>
         <p className="text-muted-foreground">
-          View and manage contact form submissions from your website visitors.
+          View and manage moving quote requests from potential customers.
         </p>
       </div>
 
@@ -105,12 +120,12 @@ export default function ContactSubmissionsPage() {
           submissions.map((submission) => (
             <Card key={submission.id} className="p-6">
               <div className="flex flex-col md:flex-row gap-6 justify-between">
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
+                <div className="space-y-4 flex-1">
+                  <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold flex items-center gap-2">
-                        {submission.subject || "No Subject"}
-                        <Badge variant={submission.status === 'unread' ? "default" : "secondary"}>
+                        {submission.name}
+                        <Badge variant={getStatusColor(submission.status)}>
                           {submission.status}
                         </Badge>
                       </h3>
@@ -118,21 +133,20 @@ export default function ContactSubmissionsPage() {
                         {format(new Date(submission.created_at), 'PPpp')}
                       </p>
                     </div>
+                    <Badge variant="outline" className="capitalize">
+                      {submission.move_type.replace(/-/g, ' ')}
+                    </Badge>
                   </div>
 
-                  <div className="grid gap-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4 text-primary" />
-                      <span className="font-medium">{submission.name}</span>
-                    </div>
-                    <a
-                      href={`mailto:${submission.email}`}
-                      className="flex items-center gap-2 hover:text-primary transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      {submission.email}
-                    </a>
-                    {submission.phone && (
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="space-y-2">
+                      <a
+                        href={`mailto:${submission.email}`}
+                        className="flex items-center gap-2 hover:text-primary transition-colors"
+                      >
+                        <Mail className="w-4 h-4" />
+                        {submission.email}
+                      </a>
                       <a
                         href={`tel:${submission.phone}`}
                         className="flex items-center gap-2 hover:text-primary transition-colors"
@@ -140,13 +154,28 @@ export default function ContactSubmissionsPage() {
                         <Phone className="w-4 h-4" />
                         {submission.phone}
                       </a>
-                    )}
-                    {submission.company && (
                       <div className="flex items-center gap-2">
-                        <Building2 className="w-4 h-4" />
-                        {submission.company}
+                        <Calendar className="w-4 h-4" />
+                        {format(new Date(submission.move_date), 'PPP')}
                       </div>
-                    )}
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">From:</span>
+                          {submission.from_location}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Truck className="w-4 h-4" />
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">To:</span>
+                          {submission.to_location}
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="bg-muted/50 p-4 rounded-lg">
@@ -154,14 +183,23 @@ export default function ContactSubmissionsPage() {
                   </div>
                 </div>
 
-                <div className="flex md:flex-col gap-2 md:w-[100px]">
+                <div className="flex md:flex-col gap-2 md:w-[120px]">
                   {submission.status === 'unread' && (
                     <Button
                       variant="outline"
                       className="flex-1"
-                      onClick={() => markAsRead(submission.id)}
+                      onClick={() => updateStatus(submission.id, 'read')}
                     >
                       Mark as Read
+                    </Button>
+                  )}
+                  {submission.status !== 'responded' && (
+                    <Button
+                      variant="default"
+                      className="flex-1"
+                      onClick={() => updateStatus(submission.id, 'responded')}
+                    >
+                      Mark Responded
                     </Button>
                   )}
                 </div>

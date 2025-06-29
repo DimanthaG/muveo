@@ -1,36 +1,51 @@
 import { NextResponse } from "next/server"
+import { createClient } from '@supabase/supabase-js'
 import { getServerSession } from "next-auth"
-import { authOptions } from "../../../auth/auth-options"
-import { supabase } from "@/lib/supabase"
+import { authOptions } from "@/app/api/auth/auth-options"
+
+// Create a Supabase client with the service role key for admin access
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      persistSession: false,
+    }
+  }
+)
 
 export async function PUT(
-  req: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
+    // Check if user is authenticated
     const session = await getServerSession(authOptions)
     if (!session) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const body = await req.json()
+    const { id } = params
+    const body = await request.json()
     const { status } = body
 
-    const { data: submission, error } = await supabase
+    if (!status || !['read', 'unread', 'responded'].includes(status)) {
+      return new NextResponse("Invalid status", { status: 400 })
+    }
+
+    // Update the submission status
+    const { data, error } = await supabaseAdmin
       .from('contact_submissions')
       .update({ status })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 
-    if (error) {
-      console.error('Error updating contact submission:', error)
-      throw error
-    }
+    if (error) throw error
 
-    return NextResponse.json(submission)
+    return NextResponse.json(data)
   } catch (error) {
-    console.error("[CONTACT_SUBMISSION_PUT]", error)
+    console.error('[CONTACT_UPDATE]', error)
     return new NextResponse(
       error instanceof Error ? error.message : "Failed to update contact submission",
       { status: 500 }
