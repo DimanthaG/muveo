@@ -23,8 +23,10 @@ export default function ContactContent() {
         name: formData.get('name'),
         email: formData.get('email'),
         phone: formData.get('phone'),
-        company: formData.get('company'),
-        subject: formData.get('subject'),
+        moveType: formData.get('moveType'),
+        moveDate: formData.get('moveDate'),
+        fromLocation: formData.get('fromLocation'),
+        toLocation: formData.get('toLocation'),
         message: formData.get('message'),
       }
 
@@ -47,10 +49,10 @@ export default function ContactContent() {
 
       ;(e.target as HTMLFormElement).reset()
     } catch (error) {
-      console.error('Error submitting form:', error)
+      console.error('Detailed error:', error)
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to send message. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -72,7 +74,7 @@ export default function ContactContent() {
             Get in Touch
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Ready to transform your social media presence? Contact us today and let's discuss how we can help your business grow.
+            Ready to plan your move? Contact us today for a free quote and let's make your moving experience smooth and stress-free.
           </p>
         </motion.div>
 
@@ -108,43 +110,73 @@ export default function ContactContent() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">Phone Number *</Label>
                   <Input
                     id="phone"
                     name="phone"
                     type="tel"
                     placeholder="Your phone number"
+                    required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="company">Company</Label>
+                  <Label htmlFor="moveType">Type of Move *</Label>
+                  <select
+                    id="moveType"
+                    name="moveType"
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                    required
+                  >
+                    <option value="">Select move type</option>
+                    <option value="residential">Residential Moving</option>
+                    <option value="commercial">Commercial Moving</option>
+                    <option value="senior">Senior Moving</option>
+                    <option value="apartment">Apartment/Condo Moving</option>
+                    <option value="storage">Storage Solutions</option>
+                  </select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="moveDate">Preferred Moving Date *</Label>
+                <Input
+                  id="moveDate"
+                  name="moveDate"
+                  type="date"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="fromLocation">Moving From *</Label>
                   <Input
-                    id="company"
-                    name="company"
-                    placeholder="Your company name"
+                    id="fromLocation"
+                    name="fromLocation"
+                    placeholder="Current address"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="toLocation">Moving To *</Label>
+                  <Input
+                    id="toLocation"
+                    name="toLocation"
+                    placeholder="Destination address"
+                    required
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="subject">Subject</Label>
-                <Input
-                  id="subject"
-                  name="subject"
-                  placeholder="What's this about?"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="message">Message *</Label>
+                <Label htmlFor="message">Additional Details *</Label>
                 <Textarea
                   id="message"
                   name="message"
-                  placeholder="How can we help you?"
+                  placeholder="Tell us about any special requirements, items that need special care, or questions you have"
                   className="min-h-[150px]"
                   required
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? "Sending..." : "Get Free Quote"}
               </Button>
             </form>
           </motion.div>
