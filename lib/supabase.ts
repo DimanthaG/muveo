@@ -39,6 +39,18 @@ export type Portfolio = {
   created_at: string
 }
 
+export type ContactSubmission = {
+  id: number
+  name: string
+  email: string
+  phone: string | null
+  company: string | null
+  subject: string | null
+  message: string
+  status: 'unread' | 'read' | 'responded'
+  created_at: string
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -51,6 +63,11 @@ export type Database = {
         Row: Portfolio
         Insert: Omit<Portfolio, 'id' | 'created_at'>
         Update: Partial<Omit<Portfolio, 'id' | 'created_at'>>
+      }
+      contact_submissions: {
+        Row: ContactSubmission
+        Insert: Omit<ContactSubmission, 'id' | 'created_at'>
+        Update: Partial<Omit<ContactSubmission, 'id' | 'created_at'>>
       }
     }
   }
