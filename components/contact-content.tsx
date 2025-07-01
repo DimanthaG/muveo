@@ -195,10 +195,40 @@ export default function ContactContent() {
                 <div>
                   <h3 className="font-semibold mb-2">Our Location</h3>
                   <address className="text-muted-foreground not-italic">
-                    330/08, Saman Mawatha<br />
-                    Lake Road<br />
-                    Boralesgamuwa
+                    2031 Kennedy Road<br />
+                    Unit 3212<br />
+                    Toronto, ON M1T 0B8
                   </address>
+                </div>
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="bg-card border border-border/50 rounded-2xl p-6">
+              <div className="flex items-start gap-4">
+                <Phone className="w-5 h-5 text-primary mt-1" />
+                <div>
+                  <h3 className="font-semibold mb-2">Phone</h3>
+                  <p className="text-muted-foreground">
+                    <a href="tel:+14379914935" className="hover:text-primary transition-colors">
+                      (437) 991-4935
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="bg-card border border-border/50 rounded-2xl p-6">
+              <div className="flex items-start gap-4">
+                <Mail className="w-5 h-5 text-primary mt-1" />
+                <div>
+                  <h3 className="font-semibold mb-2">Email</h3>
+                  <p className="text-muted-foreground">
+                    <a href="mailto:Muveo.Inc@gmail.com" className="hover:text-primary transition-colors">
+                      Muveo.Inc@gmail.com
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
