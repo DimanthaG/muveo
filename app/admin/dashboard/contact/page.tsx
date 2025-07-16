@@ -88,7 +88,7 @@ export default function ContactSubmissionsPage() {
       case 'read':
         return 'secondary'
       case 'responded':
-        return 'success'
+        return 'secondary'
       default:
         return 'default'
     }
