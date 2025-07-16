@@ -36,9 +36,9 @@ export default function AboutContent() {
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Our Moving Services</h2>
           <address className="text-muted-foreground not-italic">
-            330/08, Saman Mawatha<br />
-            Lake Road<br />
-            Boralesgamuwa
+              2031 Kennedy Road<br />
+              Unit 3212<br />
+              Toronto, ON M1T 0B8
           </address>
         </motion.div>
       </div>
