@@ -226,7 +226,7 @@ export default function ContactContent() {
                   <h3 className="font-semibold mb-2">Email</h3>
                   <p className="text-muted-foreground">
                     <a href="mailto:MuveoInc@gmail.com" className="hover:text-primary transition-colors">
-                      Muveo.Inc@gmail.com
+                      MuveoInc@gmail.com
                     </a>
                   </p>
                 </div>
